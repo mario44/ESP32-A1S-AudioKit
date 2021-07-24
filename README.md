@@ -24,8 +24,9 @@ The framework is also suitable for the company's official development board such
 
 ### Quick Start
 
-There are two versions of the A1S AudioKit A1S Chip V2.3+ is based on the ES8388 audio chipset before that AC101 was used as audio codec.
-The A1S has some features that make it superior to eg the original LyraT4.3. Unfortunately you need to add 2 solder bridges to make the ES8388 AudioKit work.
+There are two versions of the A1S AudioKit A1S Chip. V2.3+ is based on the ES8388 (board V2.2 A1S labeled 2974) audio chipset before that AC101 was used as audio codec.
+The A1S has some features that make it superior to eg the original LyraT4.3. Unfortunately you need to add 2 solder bridges to make the current ES8388 AudioKit work.
+The boards also differ by I²C GPIOs used and require different driver software.
 
 You need [version 3.3.1 of ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/v3.3.1/versions.html) to provide the toolchain, the ESP32-LyraT board and headphone connected.
 
