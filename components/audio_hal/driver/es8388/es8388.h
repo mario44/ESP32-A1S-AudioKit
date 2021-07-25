@@ -303,7 +303,9 @@ esp_err_t es8388_ctrl_state(audio_hal_codec_mode_t mode, audio_hal_ctrl_t ctrl_s
  * @return
  *      - void
  */
-void es8388_pa_power(bool enable);
+esp_err_t es8388_pa_power(bool enable);
+
+esp_err_t es8388_pa_val(bool enable);
 
 #ifdef __cplusplus
 }

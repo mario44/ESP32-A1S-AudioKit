@@ -2,7 +2,7 @@ menu "Audio HAL"
 
 choice AUDIO_BOARD
     prompt "Audio board"
-    default ESP_AI_THINKER_V2_2_BOARD
+    default ESP_AI_THINKER_V2_3_BOARD
     help
         Select an audio board to use with the ESP-ADF
 config AUDIO_BOARD_CUSTOM
@@ -22,7 +22,9 @@ config ESP32_KORVO_DU1906_BOARD
 config ESP32_S2_KALUGA_1_V1_2_BOARD
     bool "ESP32-S2-Kaluga-1 v1.2"
 config ESP_AI_THINKER_V2_2_BOARD
-    bool "ESP32-AiThinker-audio V2.2"
+    bool "ESP32-AiThinker-audio V2.2 (AC101)"
+config ESP_AI_THINKER_V2_3_BOARD
+    bool "ESP32-AiThinker-audio V2.3 (ES8388)"
 
 endchoice
 

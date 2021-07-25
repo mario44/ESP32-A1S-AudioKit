@@ -46,6 +46,12 @@ int mp3_music_read_cb(audio_element_handle_t el, char *buf, int len, TickType_t 
 
 void app_main(void)
 {
+
+#ifdef CONFIG_ESP_AI_THINKER_V2_3_BOARD
+	// audio_hal_pa_power( board_handle->audio_hal, true );
+	// audio_hal_pa_val( false );
+#endif
+
     audio_pipeline_handle_t pipeline;
     audio_element_handle_t i2s_stream_writer, mp3_decoder;
     esp_log_level_set("*", ESP_LOG_WARN);
@@ -99,6 +105,10 @@ void app_main(void)
 
     ESP_LOGI(TAG, "[3.1] Listening event from all elements of pipeline");
     audio_pipeline_set_listener(pipeline, evt);
+
+#ifdef CONFIG_ESP_AI_THINKER_V2_3_BOARD
+	audio_hal_set_volume( board_handle->audio_hal, 70 ); // 90=0dB max 99  values >70 causing noise
+#endif
 
     ESP_LOGI(TAG, "[ 4 ] Start audio_pipeline");
     audio_pipeline_run(pipeline);

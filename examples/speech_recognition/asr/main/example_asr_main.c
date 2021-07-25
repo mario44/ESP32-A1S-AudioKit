@@ -98,7 +98,7 @@ static esp_audio_handle_t setup_player()
 void app_main()
 {
 
-#if defined CONFIG_ESP_LYRAT_V4_3_BOARD
+#if defined (CONFIG_ESP_LYRAT_V4_3_BOARD) || defined (CONFIG_ESP_AI_THINKER_V2_3_BOARD)
     gpio_config_t gpio_conf = {
         .pin_bit_mask = 1UL << get_green_led_gpio(),
         .mode = GPIO_MODE_OUTPUT,

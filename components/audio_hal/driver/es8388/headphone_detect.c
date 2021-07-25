@@ -34,7 +34,7 @@
 #include "es8388.h"
 #include "board.h"
 
-#ifdef CONFIG_ESP_LYRAT_V4_3_BOARD
+#if defined (CONFIG_ESP_LYRAT_V4_3_BOARD) || (defined CONFIG_ESP_AI_THINKER_V2_3_BOARD)
 
 #define HP_DELAY_TIME_MS       1000
 
@@ -95,4 +95,4 @@ void headphone_detect_init(int num)
     gpio_install_isr_service(0);
     gpio_isr_handler_add(num, headphone_gpio_intr_handler, (void *)num);
 }
-#endif /* CONFIG_ESP_LYRAT_V4_3_BOARD */
+#endif /* CONFIG_ESP_LYRAT_V4_3_BOARD || defined CONFIG_ESP_AI_THINKER_V2_3_BOARD */

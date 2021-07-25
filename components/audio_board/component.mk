@@ -47,3 +47,7 @@ COMPONENT_ADD_INCLUDEDIRS += ./ai_thinker_audio_kit_v2_2
 COMPONENT_SRCDIRS += ./ai_thinker_audio_kit_v2_2
 endif
 
+ifdef CONFIG_ESP_AI_THINKER_V2_3_BOARD
+COMPONENT_ADD_INCLUDEDIRS += ./ai_thinker_audio_kit_v2_3
+COMPONENT_SRCDIRS += ./ai_thinker_audio_kit_v2_3
+endif

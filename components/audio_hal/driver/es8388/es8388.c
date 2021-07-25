@@ -28,12 +28,13 @@
 #include "es8388.h"
 #include "board_pins_config.h"
 
-#ifdef CONFIG_ESP_LYRAT_V4_3_BOARD
+#if defined (CONFIG_ESP_LYRAT_V4_3_BOARD) || defined (CONFIG_ESP_AI_THINKER_V2_3_BOARD)
 #include "headphone_detect.h"
 #endif
 
 static const char *ES_TAG = "ES8388_DRIVER";
 static i2c_bus_handle_t i2c_handle;
+bool es8388_pa = true;
 
 #define ES_ASSERT(a, format, b, ...) \
     if ((a) != 0) { \
@@ -49,7 +50,11 @@ audio_hal_func_t AUDIO_CODEC_ES8388_DEFAULT_HANDLE = {
     .audio_codec_set_mute = es8388_set_voice_mute,
     .audio_codec_set_volume = es8388_set_voice_volume,
     .audio_codec_get_volume = es8388_get_voice_volume,
-    .audio_hal_lock = NULL,
+#if defined (CONFIG_ESP_AI_THINKER_V2_3_BOARD)
+    .audio_codec_set_pa = es8388_pa_power,
+    .audio_codec_set_pa_val = es8388_pa_val,	
+#endif    
+	.audio_hal_lock = NULL,
     .handle = NULL,
 };
 
@@ -125,7 +130,6 @@ static int es8388_set_adc_dac_volume(int mode, int volume, int dot)
     }
     return res;
 }
-
 
 /**
  * @brief Power Management
@@ -233,7 +237,7 @@ esp_err_t es8388_deinit(void)
     int res = 0;
     res = es_write_reg(ES8388_ADDR, ES8388_CHIPPOWER, 0xFF);  //reset and stop es8388
     i2c_bus_delete(i2c_handle);
-#ifdef CONFIG_ESP_LYRAT_V4_3_BOARD
+#if defined (CONFIG_ESP_LYRAT_V4_3_BOARD) || defined (CONFIG_ESP_AI_THINKER_V2_3_BOARD)
     headphone_detect_deinit();
 #endif
 
@@ -248,7 +252,7 @@ esp_err_t es8388_deinit(void)
 esp_err_t es8388_init(audio_hal_codec_config_t *cfg)
 {
     int res = 0;
-#ifdef CONFIG_ESP_LYRAT_V4_3_BOARD
+ #if defined (CONFIG_ESP_LYRAT_V4_3_BOARD) || defined (CONFIG_ESP_AI_THINKER_V2_3_BOARD)
     headphone_detect_init(get_headphone_detect_gpio());
 #endif
 
@@ -300,7 +304,7 @@ esp_err_t es8388_init(audio_hal_codec_config_t *cfg)
     res |= es8388_set_adc_dac_volume(ES_MODULE_ADC, 0, 0);      // 0db
     res |= es_write_reg(ES8388_ADDR, ES8388_ADCPOWER, 0x09); //Power on ADC, Enable LIN&RIN, Power off MICBIAS, set int1lp to low power mode
     /* enable es8388 PA */
-    es8388_pa_power(true);
+    es8388_pa_power(es8388_pa);
     ESP_LOGI(ES_TAG, "init,out:%02x, in:%02x", cfg->dac_output, cfg->adc_input);
     return res;
 }
@@ -347,10 +351,10 @@ esp_err_t es8388_set_voice_volume(int volume)
     else if (volume > 100)
         volume = 100;
     volume /= 3;
-    res = es_write_reg(ES8388_ADDR, ES8388_DACCONTROL24, volume);
-    res |= es_write_reg(ES8388_ADDR, ES8388_DACCONTROL25, volume);
-    res |= es_write_reg(ES8388_ADDR, ES8388_DACCONTROL26, 0);
-    res |= es_write_reg(ES8388_ADDR, ES8388_DACCONTROL27, 0);
+    res =  es_write_reg(ES8388_ADDR, ES8388_DACCONTROL24, volume);      // LOUT1 volume
+    res |= es_write_reg(ES8388_ADDR, ES8388_DACCONTROL25, volume);      // ROUT1 volume
+    res |= es_write_reg(ES8388_ADDR, ES8388_DACCONTROL26, 0);           // LOUT2 volume
+    res |= es_write_reg(ES8388_ADDR, ES8388_DACCONTROL27, 0);           // ROUT2 volume  
     return res;
 }
 
@@ -530,7 +534,13 @@ esp_err_t es8388_config_i2s(audio_hal_codec_mode_t mode, audio_hal_codec_i2s_ifa
     return res;
 }
 
-void es8388_pa_power(bool enable)
+esp_err_t es8388_pa_val(bool enable)
+{
+    es8388_pa = enable;
+	return 0;
+}
+
+esp_err_t es8388_pa_power(bool enable)
 {
     gpio_config_t  io_conf;
     memset(&io_conf, 0, sizeof(io_conf));
@@ -545,4 +555,5 @@ void es8388_pa_power(bool enable)
     } else {
         gpio_set_level(get_pa_enable_gpio(), 0);
     }
+	return 0;
 }

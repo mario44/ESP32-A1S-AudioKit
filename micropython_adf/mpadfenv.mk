@@ -24,6 +24,9 @@ INC_ESPCOMP += -I$(ADFCOMP)/audio_board/include
 ifdef CONFIG_ESP_LYRAT_V4_3_BOARD
 INC_ESPCOMP += -I$(ADFCOMP)/audio_board/lyrat_v4_3
 endif
+ifdef CONFIG_ESP_AI_THINKER_V2_3_BOARD
+INC_ESPCOMP += -I$(ADFCOMP)/audio_board/ai_thinker_audio_kit_v2_3
+endif
 ifdef CONFIG_ESP_LYRAT_V4_2_BOARD
 INC_ESPCOMP += -I$(ADFCOMP)/audio_board/lyrat_v4_2
 endif

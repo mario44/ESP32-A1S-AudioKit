@@ -134,3 +134,22 @@ esp_err_t audio_hal_get_volume(audio_hal_handle_t audio_hal, int *volume)
     mutex_unlock(audio_hal->audio_hal_lock);
     return ret;
 }
+
+#ifdef CONFIG_ESP_AI_THINKER_V2_3_BOARD
+esp_err_t audio_hal_pa_power(audio_hal_handle_t audio_hal, bool power)
+{
+    esp_err_t ret;
+    AUDIO_HAL_CHECK_NULL(audio_hal, "audio_hal handle is null", -1);
+    mutex_lock(audio_hal->audio_hal_lock);
+    ret = audio_hal->audio_codec_set_pa(power);
+    mutex_unlock(audio_hal->audio_hal_lock);
+    return ret;
+}
+
+extern bool es8388_pa;
+esp_err_t audio_hal_pa_val(bool power)
+{
+	es8388_pa=power;
+    return 0;
+}
+#endif

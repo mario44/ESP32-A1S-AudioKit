@@ -139,15 +139,30 @@ typedef struct {
  * @brief Configuration of functions and variables used to operate audio codec chip
  */
 typedef struct audio_hal {
-    esp_err_t (*audio_codec_initialize)(audio_hal_codec_config_t *codec_cfg);                                /*!< initialize codec */
-    esp_err_t (*audio_codec_deinitialize)(void);                                                             /*!< deinitialize codec */
-    esp_err_t (*audio_codec_ctrl)(audio_hal_codec_mode_t mode, audio_hal_ctrl_t ctrl_state);                 /*!< control codec mode and state */
-    esp_err_t (*audio_codec_config_iface)(audio_hal_codec_mode_t mode, audio_hal_codec_i2s_iface_t *iface);  /*!< configure i2s interface */
-    esp_err_t (*audio_codec_set_mute) (bool mute);                                                           /*!< set codec mute */
-    esp_err_t (*audio_codec_set_volume)(int volume);                                                         /*!< set codec volume */
-    esp_err_t (*audio_codec_get_volume)(int *volume);                                                        /*!< get codec volume */
-    xSemaphoreHandle audio_hal_lock;                                                                         /*!< semaphore of codec */
-    void *handle;                                                                                            /*!< handle of audio codec */
+    esp_err_t (*audio_codec_initialize)(audio_hal_codec_config_t *codec_cfg);                                
+	/*!< initialize codec */
+    esp_err_t (*audio_codec_deinitialize)(void);                                                             
+	/*!< deinitialize codec */
+    esp_err_t (*audio_codec_ctrl)(audio_hal_codec_mode_t mode, audio_hal_ctrl_t ctrl_state);                 
+	/*!< control codec mode and state */
+    esp_err_t (*audio_codec_config_iface)(audio_hal_codec_mode_t mode, audio_hal_codec_i2s_iface_t *iface);  
+	/*!< configure i2s interface */
+    esp_err_t (*audio_codec_set_mute) (bool mute);                                                           
+	/*!< set codec mute */
+    esp_err_t (*audio_codec_set_volume)(int volume);                                                         
+	/*!< set codec volume */
+    esp_err_t (*audio_codec_get_volume)(int *volume);
+	/*!< get codec volume */
+#ifdef CONFIG_ESP_AI_THINKER_V2_3_BOARD
+    esp_err_t (*audio_codec_set_pa)(bool power);
+	/*!< set speaker amp state */
+    esp_err_t (*audio_codec_set_pa_val)(bool power);
+	/*!< set speaker amp variable */	
+#endif
+    xSemaphoreHandle audio_hal_lock;                                                                         
+	/*!< semaphore of codec */
+    void *handle;                                                                                            
+	/*!< handle of audio codec */
 } audio_hal_func_t;
 
 
@@ -229,6 +244,22 @@ esp_err_t audio_hal_set_volume(audio_hal_handle_t audio_hal, int volume);
  */
 esp_err_t audio_hal_get_volume(audio_hal_handle_t audio_hal, int *volume);
 
+#ifdef CONFIG_ESP_AI_THINKER_V2_3_BOARD
+/**
+ * @brief Set PA state.
+ *        @note speaker amplifier.
+ *
+ * @param audio_hal reference function pointer for selected audio codec
+ * @param amplification boolean of Speaker Amp
+ *
+ * @return     int, 0--success, others--fail
+ */
+esp_err_t audio_hal_pa_power(audio_hal_handle_t audio_hal, bool power);
+
+
+esp_err_t audio_hal_pa_val(bool power);
+
+#endif
 
 #ifdef __cplusplus
 }
